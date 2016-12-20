@@ -52,9 +52,9 @@ def main():
                 features = [art.features[f] for f in utilities.features]
                 genre_id = clf.predict([features])[0]
                 genre = utilities.genres[genre_id][0].split('/')[0]
-                csv_writer.writerow([filename, genre])
-                #proba = clf.predict_proba([features])
-                #print proba
+                proba = clf.predict_proba([features])[0][genre_id - 1]
+                csv_writer.writerow([filename, genre, proba])
+                print('Genre: ' + genre + ', probability: ' + str(proba))
 
 if __name__ == '__main__':
     main()
