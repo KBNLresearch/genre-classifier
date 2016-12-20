@@ -226,7 +226,7 @@ class Article(object):
         while len(to_frog):
             batch_size = 1 if len(to_frog) >= 1 else len(to_frog)
             batch = ' '.join(to_frog[:batch_size]).encode('utf-8')
-            print batch + '\n'
+            #print batch + '\n'
 
             query_string = urllib.urlencode({'text': batch})
 
@@ -249,8 +249,7 @@ class Article(object):
 
             lines = [l.split('\t') for l in data.split('\n') if l]
             try:
-                assert len(lines[0]) == 10, 'Frog data invalid: ' +
-                    ' '.join(data.split())
+                assert len(lines[0]) == 10, 'Frog data invalid: ' + ' '.join(data.split())
             except AssertionError as e:
                 self.frog_log('Frog data invalid: ' + ' '.join(data.split()))
                 raise
