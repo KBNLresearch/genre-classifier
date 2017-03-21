@@ -8,11 +8,11 @@ The Genre Classifier was created in collaboration with Frank Harbers (RUG) in th
 
 ## Usage
 
-The trained classifier can be applied to a folder of plain text files using the prediction script provided:
+The trained classifier can be applied to a folder of utf-8 encoded plain text files using the prediction script provided:
 
 `./predict.py [input_dir]`
 
-The features calculated for a single article can be obtained running the article script with the article url as an argument:
+The features calculated for a single article can be viewed by running the article script with the article url as an argument:
 
 `./article.py [article_url]`
 
