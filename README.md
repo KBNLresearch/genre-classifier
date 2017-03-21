@@ -12,9 +12,9 @@ The trained classifier can be applied to a folder of plain text files using the 
 
 `./predict.py [input_dir]`
 
-The features calculated for a single article can be obtained running the article script from the command line with the article url as an argument:
+The features calculated for a single article can be obtained running the article script with the article url as an argument:
 
 `./article.py [article_url]`
 
 ## Demo
-An online demo visualizing the classifier result for an article is available at [http://www.kbresearch.nl/genre/] (http://www.kbresearch.nl/genre/).
+An online demo visualizing the classifier result for a single article is available at http://www.kbresearch.nl/genre/.
