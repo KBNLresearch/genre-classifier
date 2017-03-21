@@ -79,9 +79,37 @@ features = [
     'self_cl_3-8'
 ]
 
-pronouns_1 = ['ik', 'mij', 'me', 'mijn', 'wij', 'we', 'ons']
-pronouns_2 = ['jij', 'je', 'jou', 'jouw', 'jullie', 'u', 'uw']
-pronouns_3 = ['hij', 'hem', 'zij', 'ze', 'zijn', 'haar', 'hun', 'hen', 'zich']
+pronouns_1 = [
+    'ik',
+    'mij',
+    'me',
+    'mijn',
+    'wij',
+    'we',
+    'ons'
+]
+
+pronouns_2 = [
+    'jij',
+    'je',
+    'jou',
+    'jouw',
+    'jullie',
+    'u',
+    'uw'
+]
+
+pronouns_3 = [
+    'hij',
+    'hem',
+    'zij',
+    'ze',
+    'zijn',
+    'haar',
+    'hun',
+    'hen',
+    'zich'
+]
 
 modal_verbs = [
     'Behoeven',
