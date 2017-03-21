@@ -25,25 +25,26 @@ import json
 import os
 import utilities
 
+from bottle import get
+from bottle import request
+from bottle import route
+from bottle import run
+
 from sklearn.externals import joblib
 from sklearn import svm
 
-from bottle import get, request, route, run
-
 @get('/')
 def index():
-
+    '''
+    Return the probability for each genre.
+    '''
     if not (request.query.text or request.query.url):
         return 'invoke with ?text= or ?url='
 
-    dataset = data.Dataset()
-
     if request.query.text:
-        text = request.query.text
-        art = article.Article(text=text)
+        art = article.Article(text=request.query.text)
     elif request.query.url:
-        url = request.query.url
-        art = article.Article(url=url)
+        art = article.Article(url=request.query.url)
 
     example = [art.features[f] for f in utilities.features]
 
@@ -54,8 +55,12 @@ def index():
     resp = {}
     for i, p in enumerate(proba):
         resp[utilities.genres[i + 1][0].split('/')[0]] = str(proba[i])[:6]
+    resp = json.dumps(resp)
 
-    return json.dumps(resp)
+    if request.query.callback:
+        resp = request.query.callback + '(' + resp + ')'
+
+    return resp
 
 if __name__ == '__main__':
     run(host='localhost', port=8090)
