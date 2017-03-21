@@ -20,6 +20,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import re
+import sys
 import time
 import urllib
 import utilities
@@ -268,8 +269,9 @@ class Article(object):
         with open('frog_log.txt', 'a') as f:
             f.write(self.url + ' | ' + message + '\n')
 
-if __name__ == "__main__":
-    article = Article('http://resolver.kb.nl/resolve?urn=ddd:010734861:mpeg21:a0002:ocr')
-    print(article.features)
-
-
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        article = Article(url=sys.argv[1])
+        print(article.features)
+    else:
+        print('Invoke with ./article.py [url]')
