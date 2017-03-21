@@ -22,39 +22,47 @@
 import article
 import csv
 import os
+import sys
 import utilities
 
 from sklearn.externals import joblib
 
-def decode(s):
-    encodings = ['utf-8', 'iso-8859-1']
-    decoded = ''
-    for e in encodings:
-        try:
-            decoded = s.decode(e)
-            break
-        except UnicodeDecodeError:
-            continue
-    return decoded
-
-def main():
+def predict(input_dir):
+    '''
+    Get genre probabilities for each text document in input directory.
+    '''
     clf = joblib.load('model.pkl')
 
-    input_dir = '/Users/Juliette/Documents/Code/frame-generator/input/docs'
+    with open('results.csv', 'wb') as fh:
+        writer = csv.writer(fh, delimiter='\t')
+        writer.writerow(['Filename'] + [utilities.genres[g][0].split('/')[0]
+            for g in utilities.genres])
 
-    with open('results.csv', 'wb') as res:
-        csv_writer = csv.writer(res, delimiter='\t')
         for filename in [f for f in os.listdir(input_dir) if f.endswith('.txt')]:
-            with open(input_dir + '/' + filename) as f:
+            with open(input_dir + os.sep + filename) as ifh:
                 print('Processing file: ' + filename)
-                doc = decode(f.read())
+
+                row = []
+                row.append(filename)
+
+                # Read input file
+                doc = ifh.read().decode('utf-8')
+
+                # Create article object and calculate features
                 art = article.Article(text=doc)
                 features = [art.features[f] for f in utilities.features]
-                genre_id = clf.predict([features])[0]
-                genre = utilities.genres[genre_id][0].split('/')[0]
-                proba = clf.predict_proba([features])[0][genre_id - 1]
-                csv_writer.writerow([filename, genre, proba])
-                print('Genre: ' + genre + ', probability: ' + str(proba))
+
+                # Get probability for each genre
+                proba = clf.predict_proba([features])[0]
+
+                # Save results
+                for g in utilities.genres:
+                    row.append(str(proba[g - 1])[:6])
+                writer.writerow(row)
+                print(row[1:])
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) > 1:
+        predict(sys.argv[1])
+    else:
+        print('Invoke with ./predict.py [input_dir]')
