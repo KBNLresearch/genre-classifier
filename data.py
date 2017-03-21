@@ -24,10 +24,16 @@ import csv
 import numpy as np
 import utilities
 
+
 class Dataset(object):
+    '''
+    A training set of labeled articles.
+    '''
 
     def load_training(self, path):
-
+        '''
+        Transform tabular data set into NumPy arrays.
+        '''
         # Load training data from csv file
         with open(path) as csvfile:
             reader = csv.DictReader(csvfile, delimiter='\t')
@@ -44,6 +50,7 @@ class Dataset(object):
                     dtype=np.float64)
             labels = np.ndarray(shape=(num_examples, ), dtype=np.int32)
 
+            # Add features and label for each article
             csvfile.seek(0)
             reader.next()
             for i, row in enumerate(reader):
@@ -55,52 +62,52 @@ class Dataset(object):
             return dataset, labels
 
     def generate_training(self, path):
+        '''
+        Generate training data from a list of labeled articles.
+        '''
+        with open(path, 'rU') as fh:
+            db = csv.DictReader(fh, delimiter='\t')
 
-        # Load labeled articles from database
-        with open(path, 'rU') as csvfile:
-            db = csv.DictReader(csvfile, delimiter='\t')
+        with open('data/training.txt', 'wb') as fh:
+            fieldnames = ['url', 'label'] + utilities.features
+            writer = csv.DictWriter(fh, fieldnames=fieldnames,
+                delimiter='\t')
+            writer.writeheader()
 
-            with open('data/training.txt', 'wb') as outfile:
-                fieldnames = ['url', 'label'] + utilities.features
-                writer = csv.DictWriter(outfile, fieldnames=fieldnames,
-                        delimiter='\t')
-                writer.writeheader()
+            for i, row in enumerate(db):
 
-                for i, row in enumerate(db):
-                    print 'Processing line ' + str(i)
+                # Get url
+                url = None
+                if row['Identifier']:
+                    url = row['Identifier']
+                elif (row['Prediction'] != 'None' and
+                        float(row['Confidence']) > 0.675):
+                    url = row['Prediction']
+                else:
+                    continue
+                if not url.endswith(':ocr'):
+                    url += ':ocr'
 
-                    # Get url
-                    url = None
-                    if row['Identifier']:
-                        url = row['Identifier']
-                    elif (row['Prediction'] != 'None' and
-                            float(row['Confidence']) > 0.675):
-                        url = row['Prediction']
-                    else:
-                        continue
-                    if not url.endswith(':ocr'):
-                        url += ':ocr'
+                # Get label
+                label = None
+                for g in utilities.genres:
+                    if row['Genre'] in utilities.genres[g]:
+                        label = g
+                        break
+                if not label:
+                    continue
 
-                    # Get label
-                    label = None
-                    for g in utilities.genres:
-                        if row['Genre'] in utilities.genres[g]:
-                            label = g
-                            break
-                    if not label:
-                        continue
+                # If valid training instance found, create new article
+                try:
+                    art = article.Article(url=url)
 
-                    # If valid training instance found, create new article
-                    try:
-                        art = article.Article(url=url)
+                    # Save results
+                    fields = {'label': label, 'url': url}
+                    for f in utilities.features:
+                        fields[f] = art.features[f]
+                    writer.writerow(fields)
 
-                        # Save results
-                        fields = {'label': label, 'url': url}
-                        for f in utilities.features:
-                            fields[f] = art.features[f]
-                        writer.writerow(fields)
-
-                    except (IOError, AssertionError) as e:
-                        print('Error processsing article ' + url + ': '
-                                + repr(e))
+                except (IOError, AssertionError) as e:
+                    print('Error processsing article ' + url + ': '
+                        + repr(e))
 
