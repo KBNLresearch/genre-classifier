@@ -4,7 +4,7 @@ Genre classifier for Dutch historical newspaper articles.
 
 ## Background
 
-The Genre Classifier was created in collaboration with Frank Harbers (RUG) in the context of his KB Researcher-in-residence project Discerning Journalistic Styles. It is a first attempt to automate the classification of genre of historical newspaper articles by examining features such as article length, personal pronouns, adjectives and named entities appearing in the text. The classifier was trained and evaluated using an existing labeled dataset (not publicly available), resulting in a prediction accuracy of approximately 65%.
+The Genre Classifier was created in collaboration with Frank Harbers (RUG) in the context of his KB Researcher-in-residence project Discerning Journalistic Styles. It is a first attempt to automate the classification of historical newspaper articles according to genre by examining features such as article length, personal pronouns, adjectives and named entities appearing in the text. The classifier was trained and evaluated using an existing labeled dataset (not publicly available), resulting in a prediction accuracy of approximately 65%.
 
 ## Usage
 
